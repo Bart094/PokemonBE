@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/server.ts",
   "scripts": {
-    "test": "mocha -r ts-node/register src/test/server.test.ts",
+    "test": "mocha --timeout 15000 -r ts-node/register src/test/server.test.ts",
     "dev": "nodemon src/server.ts",
     "build": "rm -rf build/ && prettier --write source/ && tsc",
     "coverage": "nyc npm run test"
