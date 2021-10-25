@@ -5,7 +5,7 @@
 ### Installation
 
 1. Download and install the latest version of Node.js from [Node.js](https://nodejs.org/)
-2. Install NPM packages launching the command npm install
+2. Install NPM packages launching the command npm install in the root folder.
 
 ### Running
 
