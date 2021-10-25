@@ -3,32 +3,27 @@ import axios, { AxiosResponse } from 'axios';
 import { Message } from '../interfaces/message';
 import { Pokemon } from '../interfaces/pokemon';
 import { TranslationResponse } from '../interfaces/translationResponse';
+import { URLSearchParams } from 'url';
 
 //POST Yoda Translation
-async function postYodaTranslation(text: string) {
-  let body = {
-    text
-  }
+async function postYodaTranslation(params) {
   try {
-    let response: AxiosResponse<TranslationResponse> = await axios.post('https://api.funtranslations.com/translate/yoda', body);
+    let response: AxiosResponse<TranslationResponse> = await axios.post('https://api.funtranslations.com/translate/yoda', params);
     return response.data.contents.translated;
   }
   catch {
-    return text;
+    return params.get('text');
   }
 }
 
 //POST Shakespeare Translation
-async function postShakespeareTranslation(text: string) {
-  let body = {
-    text
-  }
+async function postShakespeareTranslation(params) {
   try {
-    let response: AxiosResponse<TranslationResponse> = await axios.post('https://api.funtranslations.com/translate/shakespeare', body);
+    let response: AxiosResponse<TranslationResponse> = await axios.post('https://api.funtranslations.com/translate/shakespeare', params);
     return response.data.contents.translated;
   }
   catch {
-    return text;
+    return params.get('text');
   }
 }
 
@@ -63,11 +58,13 @@ const getTranslatedDescription = async (req: Request, res: Response, next: NextF
 
   try {
     result = await axios.get('https://pokeapi.co/api/v2/pokemon-species/' + req.params.pokemonName);
+    const params = new URLSearchParams();
+    params.append('text', result.data.flavor_text_entries[0].flavor_text);
     if (result.data.habitat.name == 'cave' || result.data.is_legendary) {
-      translation = await postYodaTranslation(result.data.flavor_text_entries[0].flavor_text);
+      translation = await postYodaTranslation(params);
     }
     else {
-      translation = await postShakespeareTranslation(result.data.flavor_text_entries[0].flavor_text);
+      translation = await postShakespeareTranslation(params);
     }
 
     let response: Pokemon = {
